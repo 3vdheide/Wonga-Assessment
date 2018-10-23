@@ -1,4 +1,4 @@
-﻿using Messenger.Contracts;
+using Messenger.Contracts;
 using Messenger.Models;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
@@ -67,9 +67,7 @@ namespace Messenger.Services
                         _logger.LogInformation($"Declaring exchange: {ExchangeName}");
                         channel.ExchangeDeclare(exchange: ExchangeName, type: ExchangeType.Topic);
 
-                        var queueName = rabbitModel.RoutingKey;
-                        _logger.LogInformation($"Declaring queue: {queueName}");
-                        channel.QueueDeclare(queueName);
+                        var queueName = channel.QueueDeclare(durable: true).QueueName;
 
                         channel.QueueBind(queue: queueName,
                                           exchange: ExchangeName,
